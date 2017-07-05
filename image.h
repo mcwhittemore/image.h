@@ -23,7 +23,11 @@ class Image {
 
 /** Constructur **/
 
-Image::Image(int w, int h, int nc) : height(h), width(w), numChannels(nc), image(w*h*nc) {}
+Image::Image(int w, int h, int nc) : height(h), width(w), numChannels(nc), image(w*h*nc) {
+  if (height <= 0) throw "Invalid height value";
+  if (width <= 0) throw "Invalid width value";
+  if (numChannels < 3 || numChannels > 4) throw "Invalid numChannels value";
+}
 
 // copy constuctor
 Image::Image(const Image &c) : height(c.height), width(c.width), numChannels(c.numChannels), image(c.image) {}

@@ -60,22 +60,71 @@ bool setPixelOutOfRange() {
   return true;
 };
 
-bool createImage() {
-  return false;
-};
+bool copyImage() {
+  Image img(3, 3, 4);
+  img.set(0, 0, 0, 0);
+  img.set(0, 0, 1, 1);
+  img.set(0, 0, 2, 2);
+  img.set(0, 0, 3, 3);
 
-bool copyImge() {
-  Image img(3, 3, 3);
   Image copy(img);
+  if (img.get(0, 0, 0) != copy.get(0, 0, 0)) return false;
+  if (img.get(0, 0, 1) != copy.get(0, 0, 1)) return false;
+  if (img.get(0, 0, 2) != copy.get(0, 0, 2)) return false;
+  if (img.get(0, 0, 3) != copy.get(0, 0, 3)) return false;
 
-  return false;
+  return true;
+}
+
+bool badCreateShouldThrow() {
+  // TODO: Have tests confirm error messages
+  // invalid size for vector
+  try {
+    Image img(-1, -1, -1);
+    return false;
+  }
+  catch(exception& e){
+  }
+
+  // invalid width
+  try {
+    Image img(0, 1, 3);
+    return false;
+  }
+  catch (const char* msg) {
+  }
+
+  // invalid height
+  try {
+    Image img(1, 0, 3);
+    return false;
+  }
+  catch (const char* msg) {
+  }
+
+  // too few channels
+  try {
+    Image img(1, 1, 2);
+    return false;
+  }
+  catch (const char* msg) {
+  }
+
+  // too many channels
+  try {
+    Image img(1, 1, 5);
+    return false;
+  }
+  catch (const char* msg) {
+  }
+
+  return true;
 }
 
 
 int main(int argc, char * argv[]) {
   tap::start();
   tap::test("# creating the image object");
-  tap::pass(createImage(), "creating should work");
   tap::pass(badCreateShouldThrow(), "bad create should throw");
   tap::pass(copyImage(), "copying should work");
 
