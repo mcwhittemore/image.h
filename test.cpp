@@ -1,8 +1,7 @@
 #include <iostream> 
 
-#include "./exceptions.h"
 #include "./image.h"
-#include "./tap.h"
+#include "./tap/tap.h"
 
 using namespace pixicog;
 
@@ -83,7 +82,7 @@ bool badCreateShouldThrow() {
     Image img(-1, -1, -1);
     return false;
   }
-  catch(exception& e){
+  catch(std::exception& e){
   }
 
   // invalid width

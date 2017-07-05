@@ -1,6 +1,5 @@
 #pragma once
 
-#include "./exceptions.h"
 #include <vector>
 
 namespace pixicog {
