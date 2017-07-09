@@ -131,7 +131,7 @@ bool throwFail(void (*fptr)()) {
   }
 }
 
-void createViaSetupCore() {
+void createViaSetup() {
   Image img;
   std::vector<unsigned char> vec(75);
   vec[0] = 255;
@@ -149,20 +149,17 @@ void createViaSetupCore() {
   if (two.get(0, 0, 0) == img.get(0, 0, 0)) throw "they match but I do not expect them too";
 }
 
-bool createViaSetup() {
-  return throwFail(&createViaSetupCore);
-}
-
 int main(int argc, char * argv[]) {
   tap::start();
   tap::test("creating the image object");
   tap::pass(badCreateShouldThrow(), "bad create should throw");
-  tap::pass(createViaSetup(), "create then call img.setup(...)");
+  tap::throwFail(&createViaSetup, "create then call img.setup(...)");
   tap::pass(copyImage(), "copying should work");
 
   tap::test("# setting a pixel");
   tap::pass(setPixelInRange(), "set a pixel in range should work");
   tap::pass(setPixelOutOfRange(), "setting a pixel out of range should throw");
+
   return tap::end();
 };
 

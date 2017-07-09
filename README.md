@@ -34,6 +34,18 @@ Image img(10, 5, 4);
 Image img();
 ```
 
+#### setup
+
+Overrides the internal data of a Image
+
+**Parameters**
+
+-   `w` **Integer** the width of the image, must be greater than 0
+-   `h` **Integer** the height of the image, must be greater than 0
+-   `nc` **Integer** the number of channels. Must be 1, 3, or 4.
+
+Returns **void** 
+
 #### get
 
 Gets the value of a single channel for a single pixel
@@ -56,17 +68,5 @@ Set a specific channel for one pixel
 -   `y` **Integer** the y coord
 -   `c` **Integer** the channel number
 -   `v` **unsigned-char** the new value
-
-Returns **void** 
-
-#### setup
-
-Overrides the internal data of a Image
-
-**Parameters**
-
--   `w` **Integer** the width of the image, must be greater than 0
--   `h` **Integer** the height of the image, must be greater than 0
--   `nc` **Integer** the number of channels. Must be 1, 3, or 4.
 
 Returns **void** 

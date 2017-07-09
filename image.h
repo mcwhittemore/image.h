@@ -22,15 +22,46 @@ namespace pixicog {
  * Image img();
  * 
  */
+
 class Image {
   private:
     int toPos(int x, int y, int c);
     void validate();
-
-  protected:
-    std::vector<unsigned char> image;
+/**
+ * this is where all the pixel data is kept
+ * @private
+ * @instance
+ * @memberof Image
+ * @name pixels
+ * @type {std::vector}
+ */
+    std::vector<unsigned char> pixels;
+/**
+ * the width of the image
+ * @private
+ * @instance
+ * @memberof Image
+ * @name width
+ * @type {Integer}
+ */
     int width;
+/**
+ * the height of the image
+ * @private
+ * @instance
+ * @memberof Image
+ * @name height
+ * @type {Integer}
+ */
     int height;
+/**
+ * the number of channels (1 = gray scale, 3 = RGB, 4 = RGBA)
+ * @private
+ * @instance
+ * @memberof Image
+ * @name numChannels
+ * @type {Integer}
+ */
     int numChannels;
 
   public:
@@ -45,11 +76,11 @@ class Image {
 
 Image::Image() {}
 
-Image::Image(int w, int h, int nc) : height(h), width(w), numChannels(nc), image(w*h*nc) {
+Image::Image(int w, int h, int nc) : height(h), width(w), numChannels(nc), pixels(w*h*nc) {
   validate();
 }
 
-Image::Image(const Image &c) : height(c.height), width(c.width), numChannels(c.numChannels), image(c.image) {}
+Image::Image(const Image &c) : height(c.height), width(c.width), numChannels(c.numChannels), pixels(c.pixels) {}
 
 
 Image::~Image() {
@@ -92,16 +123,16 @@ int Image::toPos(int x, int y, int c) {
  * @param {Integer} w - the width of the image, must be greater than 0
  * @param {Integer} h - the height of the image, must be greater than 0
  * @param {Integer} nc - the number of channels. Must be 1, 3, or 4.
- * @param {std::vector<unsigned-char>} img - the vector containing the data
+ * @param {std::vector<unsigned-char>} pixs - the vector containing the data
  * @public
  * @instance
  * @returns {void}
  */
-void Image::setup(int w, int h, int nc, std::vector<unsigned char> img) {
+void Image::setup(int w, int h, int nc, std::vector<unsigned char> pixs) {
   width = w;
   height = h;
   numChannels = nc;
-  image = img;
+  pixels = pixs;
   validate();
 }
 
@@ -118,7 +149,7 @@ void Image::setup(int w, int h, int nc, std::vector<unsigned char> img) {
  */
 unsigned char Image::get(int x, int y, int c) {
   int pos = toPos(x, y, c);
-  return image[pos];
+  return pixels[pos];
 }
 
 /**
@@ -136,7 +167,7 @@ unsigned char Image::get(int x, int y, int c) {
 void Image::set(int x, int y, int c, unsigned char v) {
   int pos = toPos(x, y, c);
   if (v > 255 || v < 0) throw "Color value is out of range";
-  image[pos] = v;
+  pixels[pos] = v;
 }
 
 }
