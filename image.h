@@ -4,48 +4,78 @@
 
 namespace pixicog {
 
+/**
+ * The core data structure of pixicog.
+ * @class Image
+ * @param {Integer} [width]
+ * @param {Integer} [height]
+ * @param {Integer} [numChannels]
+ * @example
+ * // create an RGB image that is 10 pixels wide and 5 pixels tall
+ * Image img(10, 5, 3);
+ * @example
+ * // create an RGBA image that is 10 pixels wide and 5 pixels tall
+ * Image img(10, 5, 4);
+ * @example
+ * // create an image with no associated data
+ * // you must call img.setup(...) before using
+ * Image img();
+ * 
+ */
 class Image {
   private:
+    int toPos(int x, int y, int c);
+    void validate();
+
+  protected:
     std::vector<unsigned char> image;
     int width;
     int height;
     int numChannels;
-    int toPos(int x, int y, int c);
 
   public:
     Image();
     Image(int w, int h, int nc);
     Image(const Image &c);
     ~Image();
+    void setup(int x, int y, int nc, std::vector<unsigned char>);
     unsigned char get(int x, int y, int c);
     void set(int x, int y, int c, unsigned char v);
 };
 
-/** Constructur **/
 Image::Image() {}
 
 Image::Image(int w, int h, int nc) : height(h), width(w), numChannels(nc), image(w*h*nc) {
   validate();
 }
 
-// copy constuctor
 Image::Image(const Image &c) : height(c.height), width(c.width), numChannels(c.numChannels), image(c.image) {}
 
-/** Deconstructor **/
 
 Image::~Image() {
-  // do I need to kill image?
+  // TODO: do I need to clear the std::vector?
 }
 
-/** PRIVATE - turn x, y, c into an pos in the underlaying array **/
-
-
+/**
+ * Makes sure the data of an image is valid
+ * @memberof Image
+ * @name validate
+ * @throws {const char*}
+ * @private
+ */
 void Image::validate() {
   if (height <= 0) throw "Invalid height value";
   if (width <= 0) throw "Invalid width value";
-  if (numChannels !== 1 || numChannels != 3 || numChannels != 4) throw "Invalid numChannels value";
+  if (numChannels != 1 && numChannels != 3 && numChannels != 4) throw "Invalid numChannels value";
 }
 
+/**
+ * convert x, y and channel into an int for the position
+ * @memberof Image
+ * @name toPos
+ * @return {Integer}
+ * @private
+ */
 int Image::toPos(int x, int y, int c) {
   if (x >= width || x < 0) throw "X coordinate is out of range";
   if (y >= height || y < 0) throw "Y coordinate is out of range";
@@ -55,13 +85,17 @@ int Image::toPos(int x, int y, int c) {
   return (y*width*numChannels)+(x*numChannels) + c;
 }
 
-/** PUBLIC **/
-
 /**
- * @param: w {Int} - the width of the image
- * @param: h {Integer} - the height of the image
- * @param: nc {Integer} - the number of channels (1, 3, 4) in the image.
- * @param: img {std::vector<unsigned char>} - the raw data for the image.
+ * Overrides the internal data of a Image
+ * @memberof Image
+ * @name setup
+ * @param {Integer} w - the width of the image, must be greater than 0
+ * @param {Integer} h - the height of the image, must be greater than 0
+ * @param {Integer} nc - the number of channels. Must be 1, 3, or 4.
+ * @param {std::vector<unsigned-char>} img - the vector containing the data
+ * @public
+ * @instance
+ * @returns {void}
  */
 void Image::setup(int w, int h, int nc, std::vector<unsigned char> img) {
   width = w;
@@ -71,14 +105,33 @@ void Image::setup(int w, int h, int nc, std::vector<unsigned char> img) {
   validate();
 }
 
+/**
+ * Gets the value of a single channel for a single pixel
+ * @memberof Image
+ * @name get
+ * @param {Integer} x - the x coord
+ * @param {Integer} y - the y coord
+ * @param {Integer} c - the channel number
+ * @public
+ * @instance
+ * @return {unsigned-char}
+ */
 unsigned char Image::get(int x, int y, int c) {
   int pos = toPos(x, y, c);
   return image[pos];
 }
 
-// Set a specific channel for one pixel
 /**
- *
+ * Set a specific channel for one pixel
+ * @memberof Image
+ * @name set
+ * @param {Integer} x - the x coord
+ * @param {Integer} y - the y coord
+ * @param {Integer} c - the channel number
+ * @param {unsigned-char} v - the new value
+ * @public
+ * @instance
+ * @return {void}
  */
 void Image::set(int x, int y, int c, unsigned char v) {
   int pos = toPos(x, y, c);

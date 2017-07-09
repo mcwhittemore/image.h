@@ -120,14 +120,47 @@ bool badCreateShouldThrow() {
   return true;
 }
 
+bool throwFail(void (*fptr)()) {
+  try {
+    fptr();
+    return true;
+  }
+  catch (const char* msg) {
+    std::cout << msg << "\n";
+    return false;
+  }
+}
+
+void createViaSetupCore() {
+  Image img;
+  std::vector<unsigned char> vec(75);
+  vec[0] = 255;
+  vec[1] = 255;
+  vec[2] = 255;
+  img.setup(5, 5, 3, vec);
+  if (255 != img.get(0, 0, 0)) throw "wrong red";
+  if (255 != img.get(0, 0, 1)) throw "wrong green";
+  if (255 != img.get(0, 0, 2)) throw "wrong blue";
+
+  Image two;
+  vec[0] = 42;
+  two.setup(5, 5, 3, vec);
+  // TODO: Break this?
+  if (two.get(0, 0, 0) == img.get(0, 0, 0)) throw "they match but I do not expect them too";
+}
+
+bool createViaSetup() {
+  return throwFail(&createViaSetupCore);
+}
 
 int main(int argc, char * argv[]) {
   tap::start();
-  tap::test("# creating the image object");
+  tap::test("creating the image object");
   tap::pass(badCreateShouldThrow(), "bad create should throw");
+  tap::pass(createViaSetup(), "create then call img.setup(...)");
   tap::pass(copyImage(), "copying should work");
 
-  tap::test("# setting a pixels");
+  tap::test("# setting a pixel");
   tap::pass(setPixelInRange(), "set a pixel in range should work");
   tap::pass(setPixelOutOfRange(), "setting a pixel out of range should throw");
   return tap::end();
