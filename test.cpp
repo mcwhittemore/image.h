@@ -1,4 +1,5 @@
 #include <iostream> 
+#include <vector>
 
 #include "./image.h"
 #include "./tap/tap.h"
@@ -120,17 +121,6 @@ bool badCreateShouldThrow() {
   return true;
 }
 
-bool throwFail(void (*fptr)()) {
-  try {
-    fptr();
-    return true;
-  }
-  catch (const char* msg) {
-    std::cout << msg << "\n";
-    return false;
-  }
-}
-
 void createViaSetup() {
   Image img;
   std::vector<unsigned char> vec(75);
@@ -147,6 +137,14 @@ void createViaSetup() {
   two.setup(5, 5, 3, vec);
   // TODO: Break this?
   if (two.get(0, 0, 0) == img.get(0, 0, 0)) throw "they match but I do not expect them too";
+};
+
+void getShapeWorks() {
+  Image img(1, 2, 3);
+  std::vector<int> shape = img.getShape();
+  if (shape[0] != 1) throw "width is wrong";
+  if (shape[1] != 2) throw "height is wrong";
+  if (shape[2] != 3) throw "num channels is wrong";
 }
 
 int main(int argc, char * argv[]) {
@@ -159,6 +157,9 @@ int main(int argc, char * argv[]) {
   tap::test("# setting a pixel");
   tap::pass(setPixelInRange(), "set a pixel in range should work");
   tap::pass(setPixelOutOfRange(), "setting a pixel out of range should throw");
+
+  tap::test("# getting the shape");
+  tap::throwFail(&getShapeWorks, "works");
 
   return tap::end();
 };

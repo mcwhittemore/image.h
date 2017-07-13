@@ -34,6 +34,12 @@ Image img(10, 5, 4);
 Image img();
 ```
 
+#### getShape
+
+Returns the shape of the Image as a vector
+
+Returns **std-vector&lt;int>** 
+
 #### setup
 
 Overrides the internal data of a Image

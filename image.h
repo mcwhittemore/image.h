@@ -69,6 +69,7 @@ class Image {
     Image(int w, int h, int nc);
     Image(const Image &c);
     ~Image();
+    std::vector<int> getShape();
     void setup(int x, int y, int nc, std::vector<unsigned char>);
     unsigned char get(int x, int y, int c);
     void set(int x, int y, int c, unsigned char v);
@@ -115,6 +116,22 @@ int Image::toPos(int x, int y, int c) {
   // TODO: should we let 0-3 work for numChannels at all times?
   return (y*width*numChannels)+(x*numChannels) + c;
 }
+
+/**
+ * Returns the shape of the Image as a vector
+ * @memberof Image
+ * @name getShape
+ * @public
+ * @instance
+ * @returns {std-vector<int>}
+ */
+std::vector<int> Image::getShape() {
+  std::vector<int> shape(3); 
+  shape[0] = width;
+  shape[1] = height;
+  shape[2] = numChannels;
+  return shape;
+};
 
 /**
  * Overrides the internal data of a Image
